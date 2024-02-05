@@ -5,9 +5,12 @@ import { Link } from 'react-router-dom';
 
 interface ProductListProps {
   products: Product[];
+  cart: Product[];
+  addToCart: (product: Product) => void;
+  removeFromCart: (productId: number) => void;
 }
 
-function ProductList({ products }: ProductListProps) {
+function ProductList({ products, addToCart, removeFromCart, cart }: ProductListProps) {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [filters, setFilters] = useState({ postalCode: 'all', category: 'all', price: null });
 
@@ -35,6 +38,10 @@ function ProductList({ products }: ProductListProps) {
   return (
     <div>
       <h2>Lista de productos</h2>
+      <p>Productos en el carrito: {cart.length}</p>
+      <Link to="/cart">
+        <button>Ver carrito</button>
+      </Link>
       <ProductFilter filters={filters} onFilterChange={setFilters} />
       <ul>
         {filteredProducts.map((product) => (
@@ -46,6 +53,8 @@ function ProductList({ products }: ProductListProps) {
             <Link to={`/products/${product.id}`}>
               <button>Ver detalles</button>
             </Link>
+            <button onClick={() => addToCart(product)}>+</button>
+            <button onClick={() => removeFromCart(product.id)}>-</button>
           </li>
         ))}
       </ul>
